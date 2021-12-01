@@ -1,6 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\Client\ClientController;
+use App\Http\Controllers\Api\Order\OrderController;
+use App\Http\Controllers\Api\Transaction\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +16,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::apiResource('/clients', ClientController::class);
+
+Route::apiResource('/orders', OrderController::class);
+
+Route::apiResource('/transactions', TransactionController::class)->only('index', 'show');
+Route::post('create_transaction/{clientId}', [TransactionController::class, 'store']);
+Route::put('update_transaction/{clientId}/{transactionId}', [TransactionController::class, 'update']);
+Route::delete('delete_transaction/{clientId}/{transactionId}', [TransactionController::class, 'destroy']);

@@ -1,15 +1,24 @@
 <?php
 
 
-namespace App\Traits;
+namespace App\Http\Requests;
 
-
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-trait ErrorResponseTrait
+class ParentRequest extends FormRequest
 {
 
-    protected function sendError($validator_errors, $message = ''){
+
+    protected function send_errors($validator_errors)
+    {
+        $errors = (new ValidationException($validator_errors))->errors();
+        return $this->sendError($errors, __('messages.validation_error'));
+    }
+
+    protected function sendError($validator_errors, $message = '')
+    {
         throw new HttpResponseException(
             response()->json([
                 'result' => [
